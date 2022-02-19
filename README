@@ -1,0 +1,34 @@
+///// Wordle-ish Game ////
+
+User functionality:
+
+- user has a visual qwerty keyword they can type OR use their keyboard
+
+- entries populate from left to right
+- back space functionality
+- enter or enter key submits answer
+
+Game Logic:
+
+- Each Refresh creates a RANDOM word for the user to guess. correctAnswer
+
+split the correctAnswer word into individual letters
+
+- Conditional:
+  - if letter is present in one location of the word, background: yellow
+  - if letter is in the exact location it should be, background: green
+
+-after each full word attempt, move to the next row for a new round of guessing
+
+-the rows operate intependently, once a row is attempted, its state remains
+
+-
+
+Visuals:
+
+- as new letters are inputted, the square shakes and grey border turns to black once user submits input
+
+- errors:
+  "not enough letters"
+  "not a word"
+  "
