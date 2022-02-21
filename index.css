@@ -15,6 +15,7 @@ html {
 :root {
   --correct-position: rgb(59, 148, 59);
   --correct-letter: rgb(204, 173, 32);
+  --incorrect-letter: rgb(34, 33, 33);
   --submitted-letter: rgb(77, 75, 75);
 }
 
@@ -96,6 +97,18 @@ html {
   text-decoration: none;
   pointer-events: none;
 }
+
+/* .correct-position {
+  background-color: var(--correct-position);
+}
+
+.correct-letter {
+  background-color: var(--correct-letter);
+}
+
+.incorrect-letter {
+  background-color: var(--incorrect-letter);
+} */
 
 /* KEYBOARD SECTION */
 

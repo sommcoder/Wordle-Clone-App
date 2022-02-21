@@ -1,31 +1,26 @@
 // DOM Element Selectors
-const keyboardBtns = document.getElementsByClassName('keyboard-btn');
-const backspaceBtn = document.querySelector('.backspace-btn');
-const enterBtn = document.querySelector('.enter-btn');
+const keyboardBtns = document.getElementsByClassName("keyboard-btn");
+const backspaceBtn = document.querySelector(".backspace-btn");
+const enterBtn = document.querySelector(".enter-btn");
 
 console.log(keyboardBtns);
-console.log(keyboardBtns[0].dataset.key);
+console.log(keyboardBtns[0].name);
 
 const keyArray = [];
-const wordle = 'SUPER';
+const wordle = "SUPER";
 
-let currRow = 0;
-let currTile = 0;
+let currRow = 1;
+let currTile = 1;
 
-const addLetter = letter => {
+keyboardBtns.addEventListener("click", (letter) => {
+  console.log(letter);
   const tile = document.querySelector(
-    `game__input-row-${currRow}-block-${currTile}`
+    `.game__input-row-${currRow}-block-${currTile}`
   );
+  console.log(tile);
   tile.textContent = letter;
   currTile++; // once entered, move to next tile
-};
-
-const handleClick = letter => {
-  console.log('clicked', letter);
-  addLetter(letter);
-};
-
-keyboardBtns.addEventListener('click', handleClick());
+});
 
 // KEYBOARD FUNCTIONALITY
 // click to input
