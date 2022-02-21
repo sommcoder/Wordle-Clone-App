@@ -3,9 +3,7 @@ const keyboardBtns = document.getElementsByClassName("keyboard-btn");
 const backspaceBtn = document.querySelector(".backspace-btn");
 const enterBtn = document.querySelector(".enter-btn");
 const guessGrid = document.querySelector("[data-guess]");
-
-console.log(keyboardBtns);
-console.log(keyboardBtns[0].name);
+const alertContainer = document.querySelector("[data-alert-container]");
 
 const targetWords = [
   "cigar",
@@ -2328,8 +2326,10 @@ const targetWords = [
 const keyArray = [];
 const offsetFromDate = new Date(2022, 0, 1);
 const msOffset = Date.now() - offsetFromDate;
-const dayOffset = msOffset / 1000 / 60 / 60 / 24;
-const targetWord = targetWords[Math.floor(dayOffset)];
+const dayOffset = -Math.trunc(
+  (new Date(2022, 0, 1) - Date.now()) / 1000 / 60 / 60 / 24
+); // # of days since 2022, Jan, 1st
+const targetWord = targetWords[Math.floor(dayOffset)]; // word of the day calculation
 
 let currRow = 1;
 let currTile = 1;
@@ -2338,7 +2338,9 @@ function initApp() {
   document.addEventListener("click", handleMouseClick);
   document.addEventListener("click", handleKeyPress);
 }
+initApp();
 
+// handling clicks:
 function handleMouseClick(e) {
   if (e.target.matches("[data-key]")) {
     pressKey(e.target.dataset.key);
@@ -2357,32 +2359,37 @@ function handleMouseClick(e) {
 }
 
 function handleKeyPress(e) {
-  if (e.key === "enter") {
-    submitGuess();
-    return;
-  }
+  // if (e.key === "enter") {
+  //   submitGuess();
+  //   return;
+  // }
 
-  if (e.key === "backspace" || e.key === "delete") {
-    deleteKey();
-    return;
-  }
-  if (e.key.match(/^[A-Z]$/)) {
+  // if (e.key === "backspace" || e.key === "delete") {
+  //   deleteKey();
+  //   return;
+  // }
+  if (e.key.match(/^[a-z][A-Z]$/)) {
     pressKey();
     return;
   }
+}
+
+// States:
+// data-state="active" :
+// data-state="inactive"
+
+function getActiveTiles() {
+  return document.querySelectorAll("[data-state='active']");
 }
 
 function pressKey(key) {
   const activeTiles = getActiveTiles();
   if (activeTiles.length >= 5) return;
   const nextTile = guessGrid.querySelector(":not([data-letter]");
+  console.log(nextTile); // null
   nextTile.dataset.letter = key.toLowerCase();
   nextTile.textContent = key;
   nextTile.dataset.state = "active";
-}
-
-function getActiveTiles() {
-  return guessGrid.querySelectorAll("[data-state='active']");
 }
 
 function stopInteraction() {
@@ -2397,11 +2404,18 @@ function submitGuess() {
   }
 }
 
-function deleteKey() {
-  const activeTiles = getActiveTiles();
-  const lastTile = activeTiles[activeTiles.length - 1];
-  if (lastTile == null) return;
-  lastTile.textContent = "";
-  delete lastTile.dataset.state;
-  delete lastTile.dataset.letter;
-}
+// function deleteKey() {
+//   const activeTiles = getActiveTiles();
+//   const lastTile = activeTiles[activeTiles.length - 1];
+//   if (lastTile == null) return;
+//   lastTile.textContent = "";
+//   delete lastTile.dataset.state;
+//   delete lastTile.dataset.letter;
+// }
+
+// function showAlert(message, duration = 1000) {
+//   const alert = document.createElement("div");
+//   alert.textContent = message;
+//   alert.classList.add("alert");
+//   alertContainer.prepend(alert);
+// }
