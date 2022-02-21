@@ -1,0 +1,147 @@
+/* Browser Resets */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 67.5%;
+  font-family: monospace;
+  background-color: white;
+  color: black;
+}
+
+/* COLOURS */
+:root {
+  --correct-position: rgb(59, 148, 59);
+  --correct-letter: rgb(204, 173, 32);
+  --submitted-letter: rgb(77, 75, 75);
+}
+
+/* NAV SECTION */
+
+#navigation-bar {
+  display: flex;
+  position: sticky;
+  font-size: 3rem;
+  border-top: 0.1rem solid lightgray;
+  border-bottom: 0.1rem solid lightgray;
+  padding: 2rem;
+  margin-bottom: 3rem;
+}
+
+#title {
+  display: inline-block;
+  font-weight: bold;
+  margin: auto;
+  width: 100%;
+  text-align: center;
+}
+
+#nav__hamburger-container {
+  position: fixed;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.nav__hamburger-line1,
+.nav__hamburger-line2,
+.nav__hamburger-line3 {
+  width: 2.1rem;
+  height: 0.3rem;
+  margin-top: 0.4rem;
+  margin-bottom: 0.4rem;
+  border-radius: 0.2rem;
+  background-color: black;
+}
+/* GAME INPUT SECTION */
+
+#game-container {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  align-content: center;
+  justify-self: center;
+  justify-content: center;
+  max-width: 500px;
+  width: 500px;
+}
+
+#game__input-container {
+  display: grid;
+  row-gap: 0.75rem;
+  justify-self: center;
+  justify-content: center;
+  margin: auto auto 3rem auto;
+}
+
+.game__input-row {
+}
+
+.game__input-block {
+  font-size: 2.4rem;
+  text-align: center;
+  text-transform: uppercase;
+  width: 5rem;
+  height: 5rem;
+  margin-right: 0.15rem;
+  margin-left: 0.15rem;
+  border-radius: none;
+  border: 0.2rem solid lightgrey;
+  /* caret-color: transparent; remove caret */
+}
+
+.game__input-block:focus {
+  outline: none;
+  text-decoration: none;
+  pointer-events: none;
+}
+
+/* KEYBOARD SECTION */
+
+#game__keyboard-container {
+  display: block;
+  text-align: center;
+  margin: 0 auto;
+  width: 500px;
+  font-size: 2rem;
+  font-weight: 300;
+}
+
+.keyboard-row {
+  display: flex;
+  margin-bottom: 8px;
+  align-items: center;
+  justify-self: center;
+}
+
+.keyboard-btn {
+  border-radius: 0.5rem;
+  cursor: pointer;
+  justify-self: center;
+  text-transform: uppercase;
+  border: none;
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin-right: 6px;
+  width: 5rem;
+  height: 7rem;
+  background-color: rgb(223, 226, 226);
+  color: black;
+}
+
+.keyboard-btn:active {
+  background-color: rgb(165, 162, 162);
+}
+
+.keyboard-btn--special {
+  /* enter and backspace btns */
+  width: 7rem;
+}
+
+.spacer {
+  text-align: center;
+  flex-basis: 0%;
+  flex-grow: 0.5;
+  flex-shrink: 1;
+}

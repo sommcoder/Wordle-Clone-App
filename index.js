@@ -1,131 +1,177 @@
+// DOM Element Selectors
+const keyboardBtns = document.getElementsByClassName('keyboard-btn');
+const backspaceBtn = document.querySelector('.backspace-btn');
+const enterBtn = document.querySelector('.enter-btn');
 
-// select word function. 
-// checks the whole dictionary database
-// returns a common 5 letter word
+console.log(keyboardBtns);
+console.log(keyboardBtns[0].dataset.key);
 
+const keyArray = [];
+const wordle = 'SUPER';
 
+let currRow = 0;
+let currTile = 0;
 
-// use the string method .split() to break 
+const addLetter = letter => {
+  const tile = document.querySelector(
+    `game__input-row-${currRow}-block-${currTile}`
+  );
+  tile.textContent = letter;
+  currTile++; // once entered, move to next tile
+};
 
-// These code snippets use an open-source library. 
+const handleClick = letter => {
+  console.log('clicked', letter);
+  addLetter(letter);
+};
 
-// // http://unirest.io/nodejs
-// unirest.get("https://wordsapiv1.p.mashape.com/words/soliloquy")
-// .header("X-Mashape-Key", "<required>")
+keyboardBtns.addEventListener('click', handleClick());
 
-// fetch()
+// KEYBOARD FUNCTIONALITY
+// click to input
+// keyboardBtns.addEventListener('click', function () {});
 
-// correctWord.split('')
+// // type to input
 
-fetch('https://wordsapiv1.p.rapidapi.com/words/%7Bword%7D', {
-  method: 'GET',
-  headers: {
-    'x-rapidapi-host': 'wordsapiv1.p.rapidapi.com',
-    'x-rapidapi-key': '4dfaa2009dmsh172c09c52425424p11f61fjsnce4a8e5aaad1',
-  },
-})
-  .then(response => {
-    console.log(response);
-  })
-  .catch(err => {
-    console.error(err);
-  });
+// const inputText = function () {};
 
+// class Game {
+//   constructor() {}
+//   _;
+// }
 
-// include conditional statements
+// const Wordle = new Game();
 
-if (randomWord.split(' ') === 5)
+// Random Words API on RapidAPI
+// Dictionary API on RapidAPI
 
-// word generator:
+// $(".input1").on('keyup', function (e) {
+//     if (e.key === 'Enter' || e.keyCode === 13) {
+//         // Do something
+//     }
+// });
 
+// // select word function.
+// // checks the whole dictionary database
+// // returns a common 5 letter word
 
-/* 
-npm install random-words
+// // use the string method .split() to break
 
-OR
+// // These code snippets use an open-source library.
 
-$ npm install check-word
+// // // http://unirest.io/nodejs
+// // unirest.get("https://wordsapiv1.p.mashape.com/words/soliloquy")
+// // .header("X-Mashape-Key", "<required>")
 
-^^^  in this method we need to create a function that creates random words... this may be more complex...
+// // fetch()
 
+// // correctWord.split('')
 
+// fetch('https://wordsapiv1.p.rapidapi.com/words/%7Bword%7D', {
+//   method: 'GET',
+//   headers: {
+//     'x-rapidapi-host': 'wordsapiv1.p.rapidapi.com',
+//     'x-rapidapi-key': '4dfaa2009dmsh172c09c52425424p11f61fjsnce4a8e5aaad1',
+//   },
+// })
+//   .then(response => {
+//     console.log(response);
+//   })
+//   .catch(err => {
+//     console.error(err);
+//   });
 
-let {randomWords} = require('random-words');
+// // include conditional statements
 
-const wordValidation = function() {
+// if (randomWord.split(' ') === 5)
 
-   let splitWord = randomWords( exactly: 1 ).split('');
+// // word generator:
 
-   if (splitWord === 5)
-   'd', 'o', 'd', 'g', 'e'
-   console.log(splitWord)
+// /*
+// npm install random-words
 
-}
+// OR
 
-*/
+// $ npm install check-word
 
-// https://www.npmjs.com/package/random-words
+// ^^^  in this method we need to create a function that creates random words... this may be more complex...
 
-  {
-  "continuationToken": "NitzdHI...==",
-  "validGuess": true,
-  "correctWord": false,
-  "numberOfGuesses": 1,
-  "wordLength": 5,
-  "gameNumber": 1,
-  "result": [
-    {
-      "index": 0,
-      "letter": "h",
-      "colour": "grey"
-    },
-    {
-      "index": 1,
-      "letter": "e",
-      "colour": "yellow"
-    },
-    {
-      "index": 2,
-      "letter": "l",
-      "colour": "grey"
-    },
-    {
-      "index": 3,
-      "letter": "l",
-      "colour": "grey"
-    },
-    {
-      "index": 4,
-      "letter": "o",
-      "colour": "yellow"
-    }
-  ],
-  "keyBoard": {
-    "a": "grey",
-    "b": "grey",
-    "c": "grey",
-    "d": "grey",
-    "e": "yellow",
-    "f": "grey",
-    "g": "grey",
-    "h": "grey",
-    "i": "grey",
-    "j": "grey",
-    "k": "grey",
-    "l": "grey",
-    "m": "grey",
-    "n": "grey",
-    "o": "yellow",
-    "p": "grey",
-    "q": "grey",
-    "r": "grey",
-    "s": "grey",
-    "t": "grey",
-    "u": "grey",
-    "v": "grey",
-    "w": "grey",
-    "x": "grey",
-    "y": "grey",
-    "z": "grey"
-  }
-}
+// let {randomWords} = require('random-words');
+
+// const wordValidation = function() {
+
+//    let splitWord = randomWords( exactly: 1 ).split('');
+
+//    if (splitWord === 5)
+//    'd', 'o', 'd', 'g', 'e'
+//    console.log(splitWord)
+
+// }
+
+// */
+
+// // https://www.npmjs.com/package/random-words
+
+//   {
+//   "continuationToken": "NitzdHI...==",
+//   "validGuess": true,
+//   "correctWord": false,
+//   "numberOfGuesses": 1,
+//   "wordLength": 5,
+//   "gameNumber": 1,
+//   "result": [
+//     {
+//       "index": 0,
+//       "letter": "h",
+//       "colour": "grey"
+//     },
+//     {
+//       "index": 1,
+//       "letter": "e",
+//       "colour": "yellow"
+//     },
+//     {
+//       "index": 2,
+//       "letter": "l",
+//       "colour": "grey"
+//     },
+//     {
+//       "index": 3,
+//       "letter": "l",
+//       "colour": "grey"
+//     },
+//     {
+//       "index": 4,
+//       "letter": "o",
+//       "colour": "yellow"
+//     }
+//   ],
+//   "keyBoard": {
+//     "a": "grey",
+//     "b": "grey",
+//     "c": "grey",
+//     "d": "grey",
+//     "e": "yellow",
+//     "f": "grey",
+//     "g": "grey",
+//     "h": "grey",
+//     "i": "grey",
+//     "j": "grey",
+//     "k": "grey",
+//     "l": "grey",
+//     "m": "grey",
+//     "n": "grey",
+//     "o": "yellow",
+//     "p": "grey",
+//     "q": "grey",
+//     "r": "grey",
+//     "s": "grey",
+//     "t": "grey",
+//     "u": "grey",
+//     "v": "grey",
+//     "w": "grey",
+//     "x": "grey",
+//     "y": "grey",
+//     "z": "grey"
+//   }
+// }
