@@ -108,7 +108,12 @@ html {
 
 .incorrect-letter {
   background-color: var(--incorrect-letter);
-} */
+  color: white;
+} 
+
+.submitted-letter {
+
+}*/
 
 /* KEYBOARD SECTION */
 
@@ -139,12 +144,16 @@ html {
   margin-right: 6px;
   width: 5rem;
   height: 7rem;
-  background-color: rgb(223, 226, 226);
+  background-color: rgb(194, 197, 197);
   color: black;
 }
 
+.keyboard-btn:hover {
+  background-color: rgb(224, 224, 224);
+}
+
 .keyboard-btn:active {
-  background-color: rgb(165, 162, 162);
+  background-color: rgb(139, 138, 138);
 }
 
 .keyboard-btn--special {
