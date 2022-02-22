@@ -24,7 +24,7 @@ html {
 #navigation-bar {
   display: flex;
   position: sticky;
-  font-size: 3rem;
+  font-size: 4rem;
   border-top: 0.1rem solid lightgray;
   border-bottom: 0.1rem solid lightgray;
   padding: 2rem;
@@ -98,7 +98,7 @@ html {
   pointer-events: none;
 }
 
-/* .correct-position {
+.correct-position {
   background-color: var(--correct-position);
 }
 
@@ -109,11 +109,7 @@ html {
 .incorrect-letter {
   background-color: var(--incorrect-letter);
   color: white;
-} 
-
-.submitted-letter {
-
-}*/
+}
 
 /* KEYBOARD SECTION */
 

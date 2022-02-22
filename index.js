@@ -2,7 +2,7 @@
 const keyboardBtns = document.getElementsByClassName("keyboard-btn");
 const backspaceBtn = document.querySelector(".backspace-btn");
 const enterBtn = document.querySelector(".enter-btn");
-const guessGrid = document.querySelector("[data-guess]");
+
 const alertContainer = document.querySelector("[data-alert-container]");
 
 const targetWords = [
@@ -2331,23 +2331,42 @@ const dayOffset = -Math.trunc(
 ); // # of days since 2022, Jan, 1st
 const targetWord = targetWords[Math.floor(dayOffset)]; // word of the day calculation
 
-let currRow = 1;
-let currTile = 1;
+const guessGrid = document.querySelectorAll(".game__input-block");
+console.log(guessGrid);
+
+let currRow = 0;
+let currTile = 0;
+
+const guessRows = [
+  ["", "", "", "", ""],
+  ["", "", "", "", ""],
+  ["", "", "", "", ""],
+  ["", "", "", "", ""],
+  ["", "", "", "", ""],
+  ["", "", "", "", ""],
+];
 
 function initApp() {
   document.addEventListener("click", handleMouseClick);
-  document.addEventListener("click", handleKeyPress);
+  document.addEventListener("keydown", handleKeyPress);
 }
+
 initApp();
+
+function stopInteraction() {
+  document.removeEventListener("click", handleMouseClick);
+  document.removeEventListener("keydown", handleKeyPress);
+}
 
 // handling clicks:
 function handleMouseClick(e) {
   if (e.target.matches("[data-key]")) {
     pressKey(e.target.dataset.key);
+    console.log(e.target.dataset.key);
     return;
   }
 
-  if (e.target.matches("[data-enter")) {
+  if (e.target.matches("[data-enter]")) {
     submitGuess();
     return;
   }
@@ -2359,59 +2378,62 @@ function handleMouseClick(e) {
 }
 
 function handleKeyPress(e) {
-  // if (e.key === "enter") {
-  //   submitGuess();
-  //   return;
-  // }
-
-  // if (e.key === "backspace" || e.key === "delete") {
-  //   deleteKey();
-  //   return;
-  // }
-  if (e.key.match(/^[a-z][A-Z]$/)) {
-    pressKey();
+  console.log(e.key);
+  if (e.key === "Enter") {
+    submitGuess();
     return;
   }
+
+  if (e.key === "Backspace" || e.key === "Delete") {
+    deleteKey(e.key);
+    return;
+  }
+  if (e.key.match(/^[a-z]$/)) {
+    pressKey(e.key);
+
+    return;
+  } else return;
 }
 
 // States:
 // data-state="active" :
 // data-state="inactive"
 
-function getActiveTiles() {
-  return document.querySelectorAll("[data-state='active']");
-}
+const activeTiles = [];
+const allRows = document.querySelectorAll(".game__input-row");
 
 function pressKey(key) {
-  const activeTiles = getActiveTiles();
-  if (activeTiles.length >= 5) return;
-  const nextTile = guessGrid.querySelector(":not([data-letter]");
-  console.log(nextTile); // null
-  nextTile.dataset.letter = key.toLowerCase();
-  nextTile.textContent = key;
-  nextTile.dataset.state = "active";
-}
+  console.log(key);
+  let i = 0;
+  allRows[i].dataset.state = "active";
+  console.log(allRows[i]);
+  allRows[i].value = key;
+  let currRow = allRows[i];
+  console.log(currRow);
+  // let j = 0;
+  // let currTile = currRow[j];
+  // console.log(currTile);
 
-function stopInteraction() {
-  document.removeEventListener("click", handleMouseClick);
-  document.removeEventListener("click", handleKeyPress);
+  if (activeTiles.length >= 5) return;
 }
 
 function submitGuess() {
   const activeTiles = [...getActiveTiles()];
+  console.log(activeTiles);
   if (activeTiles.length !== 5) {
     alert("You have not entered enough letters!");
+    return;
   }
 }
 
-// function deleteKey() {
-//   const activeTiles = getActiveTiles();
-//   const lastTile = activeTiles[activeTiles.length - 1];
-//   if (lastTile == null) return;
-//   lastTile.textContent = "";
-//   delete lastTile.dataset.state;
-//   delete lastTile.dataset.letter;
-// }
+function deleteKey() {
+  const activeTiles = getActiveTiles();
+  const lastTile = activeTiles[activeTiles.length - 1];
+  if (lastTile == null) return;
+  lastTile.textContent = "";
+  delete lastTile.dataset.state;
+  delete lastTile.dataset.letter;
+}
 
 // function showAlert(message, duration = 1000) {
 //   const alert = document.createElement("div");
