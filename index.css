@@ -89,7 +89,7 @@ html {
   margin-left: 0.15rem;
   border-radius: none;
   border: 0.2rem solid lightgrey;
-  /* caret-color: transparent; remove caret */
+  /* caret-color: transparent; */
 }
 
 .game__input-block:focus {
