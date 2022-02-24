@@ -2323,13 +2323,12 @@ const targetWords = [
   'shave',
 ];
 
-const keyArray = [];
 const offsetFromDate = new Date(2022, 0, 1);
 const msOffset = Date.now() - offsetFromDate;
 const dayOffset = -Math.trunc(
   (new Date(2022, 0, 1) - Date.now()) / 1000 / 60 / 60 / 24
 ); // # of days since 2022, Jan, 1st
-const targetWord = targetWords[Math.floor(dayOffset)]; // word of the day calculation
+const [...targetWord] = targetWords[Math.floor(dayOffset)]; // word of the day calculation
 console.log(targetWord);
 
 function startInteraction() {
@@ -2388,40 +2387,90 @@ const userInput = {
   block: 0,
   activeBlocks: [],
   getActiveBlock() {
-    console.log(this.row);
+    // console.log(this.row);
     return document.querySelector(
       `.game__input-row-${this.row}-block-${this.block}`
     );
   },
+  getActiveRow() {
+    return document.querySelectorAll(`.game__input-row-${this.row}`);
+  },
   pressKey(key) {
     if (this.activeBlocks.length >= 5) return;
     let currBlock = this.getActiveBlock();
-    console.log(currBlock);
+    // console.log(currBlock);
+    // console.log(this.activeBlocks);
     currBlock.value = key;
-    this.activeBlocks.push(currBlock.value);
+    // console.log(currBlock.value);
+    this.activeBlocks.push(currBlock);
     this.block++;
   },
   deleteKey() {
-    if (this.activeBlocks.length === 0) return;
+    if (this.activeBlocks.length === 0 || this.activeBlocks.length === 5)
+      return;
     this.block--;
     let currBlock = this.getActiveBlock();
     currBlock.value = '';
     this.activeBlocks.splice(-1);
+    // console.log(this.activeBlocks);
+  },
+  letterValidation() {
+    if (this.activeBlocks.value === targetWord[this.block])
+      this.activeBlocks.dataset.letter = 'correct-position';
+
+    if (targetWord.includes(this.activeBlocks.value))
+      this.activeBlocks.dataset.letter = 'correct-letter';
+
+    if (this.activeBlocks.value !== targetWord[this.block])
+      this.activeBlocks.dataset.letter = 'incorrect-letter';
   },
   submitGuess() {
-    if (this.activeBlocks.join('') === targetWord) alert('You Win!');
+    const submittedRow = this.activeBlocks;
+    console.log(submittedRow);
+    const submittedBlocks = submittedRow.value;
+    console.log(submittedBlocks);
+    // submittedRow.map(function(el) {
 
-    if (this.activeBlocks.length !== 5)
-      alert('You have not submitted enough letters!');
+    // }
+    //     if (el.value === targetWord) alert('You Win!');
 
-    if (this.activeBlocks.length === 5) {
-      console.log(this.activeBlocks);
-      this.activeBlocks.splice(0, this.activeBlocks.length); // clears array
-      console.log(this.activeBlocks);
-      this.row++; // iterates to NEXT ROW
-      console.log(this.row);
-    }
+    // if (this.activeBlocks.length !== 5)
+    //   alert('You have not submitted enough letters!');
+
+    // if (this.activeBlocks.length === 5) {
+    //   rowList.forEach(function (el) {
+    //     if (el.hasAttribute('correct-position')) console.log('el is correct');
+    //   });
+
+    // })
+
+    //   // const currRow = this.getActiveRow();
+    //   // console.log(currRow);
+    //   // const rowChildren = currRow.children();
+    //   // console.log(rowChildren);
+    //   // this.activeBlocks.forEach(i => {
+    //   //   console.log('this letter is correct!');
+    //   //   this.currRow[i].setAttribute(this.activeBlocks[i]);
+    //   //   console.log(this.currRow);
+    //   // });
+    //   console.log(this.activeBlocks);
+    //   this.block = 0;
+    //   console.log(this.block); // clears array
+    //   console.log(this.activeBlocks);
+
+    //   this.row++; // iterates to NEXT ROW
+    //   console.log(this.row);
+    //   this.activeBlocks.splice(0, this.activeBlocks.length);
+    // }
   },
+  correctSubmission() {
+    // const winningRow = getActiveRow();
+    // console.log(winningRow);
+    // winningRow.forEach(() => {
+    //   winningRow.style.display;
+  },
+  correctLetter() {},
+  correctPosition() {},
 };
 
 // submit: block++, clear activeBlocks array
