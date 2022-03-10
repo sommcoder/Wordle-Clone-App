@@ -76,9 +76,6 @@ html {
   margin: auto auto 3rem auto;
 }
 
-.game__input-row {
-}
-
 .game__input-block {
   font-size: 2.4rem;
   text-align: center;
@@ -89,7 +86,10 @@ html {
   margin-left: 0.15rem;
   border-radius: none;
   border: 0.2rem solid lightgrey;
-  /* caret-color: transparent; */
+  caret-color: transparent;
+  background-color: white;
+  color: black;
+  font-weight: bold;
 }
 
 .game__input-block:focus {
@@ -163,6 +163,8 @@ html {
   flex-grow: 0.5;
   flex-shrink: 1;
 }
+
+/* ALERT CONTAINER */
 
 .alert-container {
   position: fixed;
