@@ -2349,43 +2349,38 @@ function handleMouseClick(e) {
     userInput.pressKey(e.target.dataset.key);
     return;
   }
-
-  if (e.target.matches('[data-enter]')) {
-    userInput.submitGuess();
-    return;
-  }
-
   if (e.target.matches('[data-delete]')) {
     userInput.deleteKey();
     return;
   }
+
+  if (e.target.matches('[data-enter]') && userInput.activeBlocks.length === 5)
+    userInput.submitGuess();
+
+  if (e.target.matches('[data-enter]') && userInput.activeBlocks.length !== 5)
+    userInput.errMessage();
 }
 
 function handleKeyPress(e) {
-  if (e.key === 'Enter') {
-    userInput.submitGuess();
-    return;
-  }
-
   if (e.key === 'Backspace' || e.key === 'Delete') {
     userInput.deleteKey(e.key);
     return;
   }
   if (e.key.match(/^[a-z]$/)) {
     userInput.pressKey(e.key);
-
     return;
-  } else return;
+  }
+  e.key === 'Enter' && userInput.activeBlocks.length === 5
+    ? userInput.submitGuess()
+    : userInput.errMessage();
 }
-
-// States:
-// data-state="active" :
-// data-state="inactive"
 
 const userInput = {
   row: 0,
   block: 0,
   activeBlocks: [],
+  guessWord: [],
+  message: 'You have not submitted enough letters!',
   getActiveBlock() {
     // console.log(this.row);
     return document.querySelector(
@@ -2398,7 +2393,6 @@ const userInput = {
   pressKey(key) {
     if (this.activeBlocks.length >= 5) return;
     let currBlock = this.getActiveBlock();
-    // console.log(currBlock);
     // console.log(this.activeBlocks);
     currBlock.value = key;
     // console.log(currBlock.value);
@@ -2406,8 +2400,7 @@ const userInput = {
     this.block++;
   },
   deleteKey() {
-    if (this.activeBlocks.length === 0 || this.activeBlocks.length === 5)
-      return;
+    if (this.activeBlocks.length === 0) return;
     this.block--;
     let currBlock = this.getActiveBlock();
     currBlock.value = '';
@@ -2424,44 +2417,37 @@ const userInput = {
     if (this.activeBlocks.value !== targetWord[this.block])
       this.activeBlocks.dataset.letter = 'incorrect-letter';
   },
+  nextRowInit() {
+    if (this.row !== 6) {
+      this.block = 0;
+      this.activeBlocks.splice(0, this.activeBlocks.length);
+      this.row++;
+    }
+  },
+  wordListCheck() {
+    let submittedRow = this.activeBlocks;
+    let guessWord = [];
+    submittedRow.forEach(el => {
+      guessWord.push(el.value);
+    });
+    let word = guessWord.join('');
+    return word;
+  },
   submitGuess() {
-    const submittedRow = this.activeBlocks;
-    console.log(submittedRow);
-    const submittedBlocks = submittedRow.value;
-    console.log(submittedBlocks);
-    // submittedRow.map(function(el) {
-
+    let word = this.wordListCheck();
+    console.log(word);
+    if (targetWords.includes(word)) return word;
+    else this.notWordMessage();
+    // for (let i = 0; i < submittedRow.length; i++) {
+    //   let word = submittedRow[i];
     // }
-    //     if (el.value === targetWord) alert('You Win!');
-
-    // if (this.activeBlocks.length !== 5)
-    //   alert('You have not submitted enough letters!');
-
-    // if (this.activeBlocks.length === 5) {
-    //   rowList.forEach(function (el) {
-    //     if (el.hasAttribute('correct-position')) console.log('el is correct');
-    //   });
-
-    // })
-
-    //   // const currRow = this.getActiveRow();
-    //   // console.log(currRow);
-    //   // const rowChildren = currRow.children();
-    //   // console.log(rowChildren);
-    //   // this.activeBlocks.forEach(i => {
-    //   //   console.log('this letter is correct!');
-    //   //   this.currRow[i].setAttribute(this.activeBlocks[i]);
-    //   //   console.log(this.currRow);
-    //   // });
-    //   console.log(this.activeBlocks);
-    //   this.block = 0;
-    //   console.log(this.block); // clears array
-    //   console.log(this.activeBlocks);
-
-    //   this.row++; // iterates to NEXT ROW
-    //   console.log(this.row);
-    //   this.activeBlocks.splice(0, this.activeBlocks.length);
-    // }
+    this.nextRowInit();
+  },
+  errMessage() {
+    alert(this.message);
+  },
+  notWordMessage() {
+    alert('This word is not part of our directory');
   },
   correctSubmission() {
     // const winningRow = getActiveRow();
