@@ -92,6 +92,37 @@ html {
   font-weight: bold;
 }
 
+.game__input-block [data-status='entered'] {
+  animation-name: key-input;
+  animation: linear;
+  border: 0.2rem solid black;
+}
+
+.game__input-block [data-status='entered'] {
+  animation-name: key-input;
+  animation: linear;
+  border: 0.2rem solid black;
+}
+
+.correct-position {
+  animation-name: key-input;
+  animation: linear;
+  border: 0.2rem solid black;
+}
+
+@keyframes key-input {
+  0% {
+    width: 5.25rem;
+    height: 5.25rem;
+  }
+  50% {
+  }
+  100% {
+    width: 5rem;
+    height: 5rem;
+  }
+}
+
 .game__input-block:focus {
   outline: none;
   text-decoration: none;
