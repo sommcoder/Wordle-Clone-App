@@ -6,6 +6,10 @@ const alertContainer = $('[data-alert-container]');
 
 ///////////// Word Library///////////
 const targetWords = [
+  'cramp',
+  'found',
+  'audio',
+  'acorn',
   'cigar',
   'rebut',
   'sissy',
@@ -2322,6 +2326,9 @@ const targetWords = [
   'rural',
   'shave',
 ];
+
+//// Target Word Selector ////
+
 const offsetFromDate = new Date(2022, 0, 1);
 const msOffset = Date.now() - offsetFromDate;
 const dayOffset = -Math.trunc(
@@ -2353,7 +2360,7 @@ function handleMouseClick(e) {
 
   if (e.target.matches('[data-enter]')) {
     userInput.activeBlocks.length === 5
-      ? userInput.submitGuess()
+      ? userInput.wordListCheck()
       : alert('You need to submit 5 letters!');
   }
 
@@ -2363,31 +2370,26 @@ function handleMouseClick(e) {
   }
 
   if (e.target.matches('[data-enter]') && userInput.activeBlocks.length === 5)
-    userInput.submitGuess();
+    userInput.wordListCheck();
 
   if (e.target.matches('[data-enter]') && userInput.activeBlocks.length !== 5)
     userInput.errMessage();
 }
 
 function handleKeyPress(e) {
-  if (e.key === 'Enter') {
-    userInput.activeBlocks.length === 5
-      ? userInput.submitGuess()
-      : alert('You need to submit 5 letters!');
+  if (e.key.match(/^[A-Z,a-z]$/)) {
+    userInput.pressKey(e.key);
+    return;
   }
+  if (e.key === 'Enter' && userInput.activeBlocks.length === 0) return;
+
+  if (e.key === 'Enter' && userInput.activeBlocks.length === 5)
+    userInput.wordListCheck();
 
   if (e.key === 'Backspace' || e.key === 'Delete') {
     userInput.deleteKey(e.key);
     return;
   }
-
-  if (e.key.match(/^[A-Z,a-z]$/)) {
-    userInput.pressKey(e.key);
-    return;
-  }
-  e.key === 'Enter' && userInput.activeBlocks.length === 5
-    ? userInput.submitGuess()
-    : userInput.errMessage();
 }
 
 /////////////////////////////////////////////////
@@ -2397,11 +2399,10 @@ function handleKeyPress(e) {
 const userInput = {
   row: 0,
   block: 0,
-  activeBlocks: [],
-  guessWord: [],
-  message: 'You have not submitted enough letters!',
+  activeBlocks: [], // DOM nodes
+  guessLetters: [], // DOM node values
+  submittedWord: '',
   getActiveBlock() {
-    // console.log(this.row);
     return document.querySelector(
       `.game__input-row-${this.row}-block-${this.block}`
     );
@@ -2410,69 +2411,74 @@ const userInput = {
     return document.querySelectorAll(`.game__input-row-${this.row}`);
   },
   pressKey(key) {
-    if (this.activeBlocks.length >= 5) return; // prevents excess input
+    if (this.activeBlocks.length >= 5) return;
     let currBlock = this.getActiveBlock();
     console.log(currBlock);
-    console.log(this.activeBlocks);
     currBlock.value = key;
-    console.log(currBlock.value);
+    currBlock.dataset.status = 'entered';
+    console.log(currBlock.dataset.status);
+    // add animation link to CSS per key press
     this.activeBlocks.push(currBlock);
-    console.log(this.activeBlocks);
     this.block++;
   },
   deleteKey() {
-    if (this.activeBlocks.length === 0) return; // guard clause
+    if (this.activeBlocks.length === 0) return;
+    // guard clause
     this.block--;
     let currBlock = this.getActiveBlock();
     currBlock.value = '';
     this.activeBlocks.splice(-1);
+    this.submittedWord.substring(1);
+
     // console.log(this.activeBlocks);
-  },
-  letterValidation() {
-    if (this.activeBlocks.value === targetWord[this.block])
-      this.activeBlocks.dataset.letter = 'correct-position';
-
-    if (targetWord.includes(this.activeBlocks.value))
-      this.activeBlocks.dataset.letter = 'correct-letter';
-
-    if (this.activeBlocks.value !== targetWord[this.block])
-      this.activeBlocks.dataset.letter = 'incorrect-letter';
   },
   nextRowInit() {
     if (this.row !== 6) {
-      this.block = 0;
-      this.activeBlocks.splice(0, this.activeBlocks.length);
-      this.row++;
+      this.block = 0; // resets to 1st block
+      this.activeBlocks.splice(0, this.activeBlocks.length); // remove contents of array
+      console.log(this.activeBlocks);
+      this.submittedWord = '';
+      this.guessLetters = [];
+      console.log(this.submittedWord);
+      this.row++; // next row
     }
   },
   wordListCheck() {
+    if (this.activeBlocks.length !== 5) {
+      console.log(userInput.activeBlocks.length);
+      return alert('You have not submitted enough letters!');
+    }
     let submittedRow = this.activeBlocks;
-    let guessWord = [];
+    console.log(submittedRow);
     submittedRow.forEach(el => {
-      guessWord.push(el.value);
+      this.guessLetters.push(el.value);
     });
-    let word = guessWord.join('');
-    return word;
+    this.submittedWord = this.guessLetters.join('');
+    console.log(this.submittedWord);
+    if (targetWords.includes(this.submittedWord)) {
+      this.submitGuess();
+    } else {
+      alert('This word is not in our directory. Please try another word!');
+    }
   },
   submitGuess() {
+    console.log(this.guessLetters);
+    console.log(this.submittedWord);
+    console.log(this.activeBlocks);
     console.log(this.activeBlocks.length);
-    if (this.activeBlocks.length === 5);
-    {
-      const submittedRow = this.activeBlocks;
-      console.log(submittedRow);
-      const submittedBlocks = submittedRow.value;
-      console.log(submittedBlocks);
-      // submittedRow.map(function(el) {
 
-      this.block = 0;
-      console.log(this.block); // clears array
-      console.log(this.activeBlocks);
+    for (let i = 0; i < this.activeBlocks.length; i++) {
+      if (targetWord.includes(this.activeBlocks[i].value)) {
+        this.activeBlocks[i].style.background = 'yellow';
 
-      this.row++; // iterates to NEXT ROW
-      console.log(this.row);
-      this.activeBlocks.splice(0, this.activeBlocks.length);
-      console.log(this.activeBlocks);
+        if (this.activeBlocks[i].value === targetWord[i]) {
+          this.activeBlocks[i].style.background = 'green';
+        }
+      } else this.activeBlocks[i].style.background = 'grey';
     }
+    console.log(this.activeBlocks);
+    this.nextRowInit();
+    console.log(this.activeBlocks); // should be blank
   },
   correctSubmission() {
     // const winningRow = getActiveRow();
@@ -2480,6 +2486,4 @@ const userInput = {
     // winningRow.forEach(() => {
     //   winningRow.style.display;
   },
-  correctLetter() {},
-  correctPosition() {},
 };
