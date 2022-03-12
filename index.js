@@ -1,10 +1,10 @@
-// DOM Element Selectors
-const keyboardBtns = document.getElementsByClassName('keyboard-btn');
-const backspaceBtn = document.querySelector('.backspace-btn');
-const enterBtn = document.querySelector('.enter-btn');
+/////////// DOM Element Selectors//////
+const keyboardBtns = $('.keyboard-btn');
+const backspaceBtn = $('.backspace-btn');
+const enterBtn = $('.enter-btn');
+const alertContainer = $('[data-alert-container]');
 
-const alertContainer = document.querySelector('[data-alert-container]');
-
+///////////// Word Library///////////
 const targetWords = [
   'cigar',
   'rebut',
@@ -2322,7 +2322,6 @@ const targetWords = [
   'rural',
   'shave',
 ];
-
 const offsetFromDate = new Date(2022, 0, 1);
 const msOffset = Date.now() - offsetFromDate;
 const dayOffset = -Math.trunc(
@@ -2331,24 +2330,33 @@ const dayOffset = -Math.trunc(
 const [...targetWord] = targetWords[Math.floor(dayOffset)]; // word of the day calculation
 console.log(targetWord);
 
+/////////// Event Handling///////////
 function startInteraction() {
-  document.addEventListener('click', handleMouseClick);
-  document.addEventListener('keydown', handleKeyPress);
+  $(document).ready(() => {
+    $(document).on('click', handleMouseClick);
+    $(document).on('keydown', handleKeyPress);
+  });
 }
 
-startInteraction();
+startInteraction(); // initiates program
 
 function stopInteraction() {
-  document.removeEventListener('click', handleMouseClick);
-  document.removeEventListener('keydown', handleKeyPress);
+  $(document).off('click', handleMouseClick);
+  $(document).off('keydown', handleKeyPress);
 }
 
-// handling clicks:
 function handleMouseClick(e) {
   if (e.target.matches('[data-key]')) {
     userInput.pressKey(e.target.dataset.key);
     return;
   }
+
+  if (e.target.matches('[data-enter]')) {
+    userInput.activeBlocks.length === 5
+      ? userInput.submitGuess()
+      : alert('You need to submit 5 letters!');
+  }
+
   if (e.target.matches('[data-delete]')) {
     userInput.deleteKey();
     return;
@@ -2362,11 +2370,18 @@ function handleMouseClick(e) {
 }
 
 function handleKeyPress(e) {
+  if (e.key === 'Enter') {
+    userInput.activeBlocks.length === 5
+      ? userInput.submitGuess()
+      : alert('You need to submit 5 letters!');
+  }
+
   if (e.key === 'Backspace' || e.key === 'Delete') {
     userInput.deleteKey(e.key);
     return;
   }
-  if (e.key.match(/^[a-z]$/)) {
+
+  if (e.key.match(/^[A-Z,a-z]$/)) {
     userInput.pressKey(e.key);
     return;
   }
@@ -2374,6 +2389,10 @@ function handleKeyPress(e) {
     ? userInput.submitGuess()
     : userInput.errMessage();
 }
+
+/////////////////////////////////////////////////
+//////////////// APPLICATION ////////////////////
+/////////////////////////////////////////////////
 
 const userInput = {
   row: 0,
@@ -2391,16 +2410,18 @@ const userInput = {
     return document.querySelectorAll(`.game__input-row-${this.row}`);
   },
   pressKey(key) {
-    if (this.activeBlocks.length >= 5) return;
+    if (this.activeBlocks.length >= 5) return; // prevents excess input
     let currBlock = this.getActiveBlock();
-    // console.log(this.activeBlocks);
+    console.log(currBlock);
+    console.log(this.activeBlocks);
     currBlock.value = key;
-    // console.log(currBlock.value);
+    console.log(currBlock.value);
     this.activeBlocks.push(currBlock);
+    console.log(this.activeBlocks);
     this.block++;
   },
   deleteKey() {
-    if (this.activeBlocks.length === 0) return;
+    if (this.activeBlocks.length === 0) return; // guard clause
     this.block--;
     let currBlock = this.getActiveBlock();
     currBlock.value = '';
@@ -2434,20 +2455,24 @@ const userInput = {
     return word;
   },
   submitGuess() {
-    let word = this.wordListCheck();
-    console.log(word);
-    if (targetWords.includes(word)) return word;
-    else this.notWordMessage();
-    // for (let i = 0; i < submittedRow.length; i++) {
-    //   let word = submittedRow[i];
-    // }
-    this.nextRowInit();
-  },
-  errMessage() {
-    alert(this.message);
-  },
-  notWordMessage() {
-    alert('This word is not part of our directory');
+    console.log(this.activeBlocks.length);
+    if (this.activeBlocks.length === 5);
+    {
+      const submittedRow = this.activeBlocks;
+      console.log(submittedRow);
+      const submittedBlocks = submittedRow.value;
+      console.log(submittedBlocks);
+      // submittedRow.map(function(el) {
+
+      this.block = 0;
+      console.log(this.block); // clears array
+      console.log(this.activeBlocks);
+
+      this.row++; // iterates to NEXT ROW
+      console.log(this.row);
+      this.activeBlocks.splice(0, this.activeBlocks.length);
+      console.log(this.activeBlocks);
+    }
   },
   correctSubmission() {
     // const winningRow = getActiveRow();
@@ -2458,20 +2483,3 @@ const userInput = {
   correctLetter() {},
   correctPosition() {},
 };
-
-// submit: block++, clear activeBlocks array
-
-// const lastTile = activeBlocks[activeBlocks.length - 1];
-// if (lastTile == null) return;
-// delete lastTile;
-// activeBlocks.splice(-1);
-// console.log(activeBlocks);
-// console.log(lastTile);
-// lastTile.value = '';
-
-// function showAlert(message, duration = 1000) {
-//   const alert = document.createElement("div");
-//   alert.textContent = message;
-//   alert.classList.add("alert");
-//   alertContainer.prepend(alert);
-// }
