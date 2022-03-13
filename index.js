@@ -1,8 +1,9 @@
 /////////// DOM Element Selectors//////
-const keyboardBtns = $('.keyboard-btn');
-const backspaceBtn = $('.backspace-btn');
-const enterBtn = $('.enter-btn');
-const alertContainer = $('[data-alert-container]');
+const keyboardBtnList = $('.keyboard-btn');
+console.log(keyboardBtnList);
+const gameContainer = $('game-container');
+
+const FLIP_ANIMATION_DURATION = 500;
 
 ///////////// Word Library///////////
 const targetWords = [
@@ -2383,7 +2384,7 @@ function handleKeyPress(e) {
   }
   if (e.key === 'Enter' && userInput.activeBlocks.length === 0) return;
 
-  if (e.key === 'Enter' && userInput.activeBlocks.length === 5)
+  if (e.key === 'Enter' && userInput.activeBlocks.length <= 5)
     userInput.wordListCheck();
 
   if (e.key === 'Backspace' || e.key === 'Delete') {
@@ -2401,7 +2402,7 @@ const userInput = {
   block: 0,
   activeBlocks: [], // DOM nodes
   guessLetters: [], // DOM node values
-  submittedWord: '',
+  // word below needs to be in an obj to mutate
   getActiveBlock() {
     return document.querySelector(
       `.game__input-row-${this.row}-block-${this.block}`
@@ -2411,12 +2412,11 @@ const userInput = {
     return document.querySelectorAll(`.game__input-row-${this.row}`);
   },
   pressKey(key) {
+    console.log(this.activeBlocks);
     if (this.activeBlocks.length >= 5) return;
     let currBlock = this.getActiveBlock();
-    console.log(currBlock);
     currBlock.value = key;
-    currBlock.dataset.status = 'entered';
-    console.log(currBlock.dataset.status);
+    currBlock.classList.add('entered-letter');
     // add animation link to CSS per key press
     this.activeBlocks.push(currBlock);
     this.block++;
@@ -2424,66 +2424,126 @@ const userInput = {
   deleteKey() {
     if (this.activeBlocks.length === 0) return;
     // guard clause
+
     this.block--;
     let currBlock = this.getActiveBlock();
+    currBlock.classList.remove('entered-letter');
     currBlock.value = '';
     this.activeBlocks.splice(-1);
-    this.submittedWord.substring(1);
-
-    // console.log(this.activeBlocks);
   },
   nextRowInit() {
     if (this.row !== 6) {
       this.block = 0; // resets to 1st block
       this.activeBlocks.splice(0, this.activeBlocks.length); // remove contents of array
       console.log(this.activeBlocks);
-      this.submittedWord = '';
       this.guessLetters = [];
-      console.log(this.submittedWord);
       this.row++; // next row
     }
   },
   wordListCheck() {
-    if (this.activeBlocks.length !== 5) {
-      console.log(userInput.activeBlocks.length);
-      return alert('You have not submitted enough letters!');
-    }
-    let submittedRow = this.activeBlocks;
-    console.log(submittedRow);
-    submittedRow.forEach(el => {
-      this.guessLetters.push(el.value);
-    });
-    this.submittedWord = this.guessLetters.join('');
-    console.log(this.submittedWord);
-    if (targetWords.includes(this.submittedWord)) {
-      this.submitGuess();
+    if (this.activeBlocks.length < 5) {
+      this.shakeBlocks();
+      this.notEnoughLettersMessage();
     } else {
-      alert('This word is not in our directory. Please try another word!');
+      let submittedRow = this.activeBlocks;
+      let guessLetters = [];
+      console.log(submittedRow);
+      submittedRow.forEach(el => {
+        guessLetters.push(el.value);
+      });
+      let submittedWord = guessLetters.join('');
+      if (targetWords.includes(submittedWord)) {
+        this.submitGuess(guessLetters);
+      } else {
+        this.shakeBlocks();
+        this.notWordMessage();
+      }
     }
   },
-  submitGuess() {
-    console.log(this.guessLetters);
-    console.log(this.submittedWord);
+  notEnoughLettersMessage(message, duration = 1000) {
+    gameContainer.insertAdjacentHTML(`
+    <div class="alert-container">
+        <div class="alert-message">
+        Please submit 5 letters!
+        </div>
+    </div>
+   `);
+  },
+  notWordMessage(message, duration = 1000) {
+    gameContainer.insertAdjacentHTML(`
+    <div class="alert-container">
+        <div class="alert-message">
+        Not a word!
+        </div>
+    </div>
+   `);
+  },
+  shakeBlocks() {
+    this.activeBlocks.forEach(block => {
+      block.classList.add('shake');
+      block.addEventListener(
+        'animationend',
+        () => {
+          block.classList.remove('shake');
+        },
+        { once: true }
+      );
+    });
+  },
+  danceBlocks() {},
+  flipBlock(tile, ind, arr, guess) {
+    const letter = this.activeBlocks.value;
+    console.log(letter);
+    const key = keyboardBtnList.querySelector(`[data-key="${letter}"`);
+    setTimeout(() => {
+      this.activeBlocks.classList.add('reveal');
+    }, (ind * FLIP_ANIMATION_DURATION) / 2);
+
+    this.activeBlocks.addEventListener('transitionend', () => {
+      this.activeBlocks.classList.remove('reveal');
+      if (targetWord[ind] === letter) {
+        key.classList.add('');
+      }
+    });
+
+    this.activeBlocks.forEach(block => {
+      block.classList.add('reveal');
+      block.addEventListener(
+        'animationend',
+        () => {
+          block.classList.remove('reveal');
+        },
+        { once: true }
+      );
+    });
+  },
+  submitGuess(guessLetters) {
+    console.log(guessLetters);
     console.log(this.activeBlocks);
     console.log(this.activeBlocks.length);
 
-    for (let i = 0; i < this.activeBlocks.length; i++) {
-      if (targetWord.includes(this.activeBlocks[i].value)) {
-        this.activeBlocks[i].style.background = 'yellow';
+    for (let i = 0; i < guessLetters.length; i++) {
+      if (targetWord.includes(guessLetters[i])) {
+        this.activeBlocks[i].classList.add('correct-letter');
 
         if (this.activeBlocks[i].value === targetWord[i]) {
-          this.activeBlocks[i].style.background = 'green';
+          this.activeBlocks[i].classList.add('correct-position');
         }
-      } else this.activeBlocks[i].style.background = 'grey';
+      } else {
+        this.activeBlocks[i].classList.add('incorrect-letter');
+      }
     }
-    console.log(this.activeBlocks);
-    this.nextRowInit();
-    console.log(this.activeBlocks); // should be blank
+    this.correctSubmission(guessLetters);
   },
   correctSubmission() {
-    // const winningRow = getActiveRow();
-    // console.log(winningRow);
-    // winningRow.forEach(() => {
-    //   winningRow.style.display;
+    let submittedRow = this.activeBlocks;
+    console.log(submittedRow);
+    let result = submittedRow.every(el =>
+      el.classList.contains('correct-position')
+    );
+    console.log(result);
+    if (result === true) {
+      stopInteraction();
+    } else this.nextRowInit();
   },
 };

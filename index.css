@@ -90,30 +90,22 @@ html {
   background-color: white;
   color: black;
   font-weight: bold;
+  transition: transform 250ms linear;
 }
 
-.game__input-block [data-status='entered'] {
-  animation-name: key-input;
-  animation: linear;
-  border: 0.2rem solid black;
-}
+/* INPUT BOX MODS */
 
-.game__input-block [data-status='entered'] {
+.entered-letter {
   animation-name: key-input;
   animation: linear;
-  border: 0.2rem solid black;
-}
-
-.correct-position {
-  animation-name: key-input;
-  animation: linear;
+  animation-duration: 500ms;
   border: 0.2rem solid black;
 }
 
 @keyframes key-input {
   0% {
-    width: 5.25rem;
-    height: 5.25rem;
+    width: 5.5rem;
+    height: 5.5rem;
   }
   50% {
   }
@@ -123,23 +115,82 @@ html {
   }
 }
 
-.game__input-block:focus {
-  outline: none;
-  text-decoration: none;
-  pointer-events: none;
+.correct-letter {
+  background-color: var(--correct-letter);
+  border: 0.2rem solid black;
 }
 
 .correct-position {
   background-color: var(--correct-position);
-}
-
-.correct-letter {
-  background-color: var(--correct-letter);
+  border: 0.2rem solid black;
+  color: white;
 }
 
 .incorrect-letter {
   background-color: var(--incorrect-letter);
+  border: 0.2rem solid black;
   color: white;
+}
+
+.shake {
+  animation: shake 250ms ease-in-out;
+}
+
+.reveal {
+  transform: rotateX();
+  /* animation: reveal 350ms ease-in-out; */
+}
+
+@keyframes reveal {
+  10% {
+    transform: translateX(-5%);
+  }
+  30% {
+    transform: translateX(5%);
+  }
+  50% {
+    transform: translateX(-7.5%);
+  }
+  70% {
+    transform: translateX(7.5%);
+  }
+  90% {
+    transform: translateX(5%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+@keyframes shake {
+  10% {
+    transform: translateX(-5%);
+  }
+  30% {
+    transform: translateX(5%);
+  }
+  50% {
+    transform: translateX(-7.5%);
+  }
+  70% {
+    transform: translateX(7.5%);
+  }
+  90% {
+    transform: translateX(5%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+.hide {
+  display: none;
+}
+
+.game__input-block:focus {
+  outline: none;
+  text-decoration: none;
+  pointer-events: none;
 }
 
 /* KEYBOARD SECTION */
@@ -202,7 +253,7 @@ html {
   top: 10vh;
   left: 50vw;
   transform: translateX(-50%);
-  z-index: 1;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -210,7 +261,7 @@ html {
 
 .alert {
   pointer-events: none;
-  background-color: hsl(204, 7%, 85%);
+  background-color: black;
   padding: 0.75rem;
   border-radius: 0.25rem;
   opacity: 1;
@@ -220,4 +271,8 @@ html {
 
 .alert:last-child {
   margin-bottom: 0;
+}
+
+.alert.hide {
+  opacity: 0;
 }
