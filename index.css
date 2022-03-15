@@ -115,51 +115,18 @@ html {
   }
 }
 
-.correct-letter {
-  background-color: var(--correct-letter);
-  border: 0.2rem solid black;
-}
-
-.correct-position {
-  background-color: var(--correct-position);
-  border: 0.2rem solid black;
-  color: white;
-}
-
-.incorrect-letter {
-  background-color: var(--incorrect-letter);
-  border: 0.2rem solid black;
-  color: white;
-}
-
 .shake {
   animation: shake 250ms ease-in-out;
 }
 
-.reveal {
-  transform: rotateX();
-  /* animation: reveal 350ms ease-in-out; */
+.hide {
+  transform: rotateX(90deg);
+  animation: 350ms ease-in-out;
 }
 
-@keyframes reveal {
-  10% {
-    transform: translateX(-5%);
-  }
-  30% {
-    transform: translateX(5%);
-  }
-  50% {
-    transform: translateX(-7.5%);
-  }
-  70% {
-    transform: translateX(7.5%);
-  }
-  90% {
-    transform: translateX(5%);
-  }
-  100% {
-    transform: translateX(0%);
-  }
+.reveal {
+  transform: rotateX(-90deg);
+  animation: 350ms ease-in-out;
 }
 
 @keyframes shake {
@@ -183,8 +150,21 @@ html {
   }
 }
 
-.hide {
-  display: none;
+.correct-letter {
+  background-color: var(--correct-letter);
+  border: 0.2rem solid black;
+}
+
+.correct-position {
+  background-color: var(--correct-position);
+  border: 0.2rem solid black;
+  color: white;
+}
+
+.incorrect-letter {
+  background-color: var(--incorrect-letter);
+  border: 0.2rem solid black;
+  color: white;
 }
 
 .game__input-block:focus {

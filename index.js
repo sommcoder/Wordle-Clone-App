@@ -1,6 +1,6 @@
 /////////// DOM Element Selectors//////
 const keyboardBtnList = $('.keyboard-btn');
-console.log(keyboardBtnList);
+console.log(keyboardBtnList[1]);
 const gameContainer = $('game-container');
 
 const FLIP_ANIMATION_DURATION = 500;
@@ -2401,7 +2401,7 @@ const userInput = {
   row: 0,
   block: 0,
   activeBlocks: [], // DOM nodes
-  guessLetters: [], // DOM node values
+  // guessLetters: [], // DOM node values
   // word below needs to be in an obj to mutate
   getActiveBlock() {
     return document.querySelector(
@@ -2447,7 +2447,6 @@ const userInput = {
     } else {
       let submittedRow = this.activeBlocks;
       let guessLetters = [];
-      console.log(submittedRow);
       submittedRow.forEach(el => {
         guessLetters.push(el.value);
       });
@@ -2491,49 +2490,41 @@ const userInput = {
     });
   },
   danceBlocks() {},
-  flipBlock(tile, ind, arr, guess) {
-    const letter = this.activeBlocks.value;
-    console.log(letter);
-    const key = keyboardBtnList.querySelector(`[data-key="${letter}"`);
-    setTimeout(() => {
-      this.activeBlocks.classList.add('reveal');
-    }, (ind * FLIP_ANIMATION_DURATION) / 2);
-
-    this.activeBlocks.addEventListener('transitionend', () => {
-      this.activeBlocks.classList.remove('reveal');
-      if (targetWord[ind] === letter) {
-        key.classList.add('');
-      }
-    });
-
-    this.activeBlocks.forEach(block => {
-      block.classList.add('reveal');
-      block.addEventListener(
-        'animationend',
-        () => {
-          block.classList.remove('reveal');
-        },
-        { once: true }
-      );
-    });
-  },
   submitGuess(guessLetters) {
     console.log(guessLetters);
     console.log(this.activeBlocks);
     console.log(this.activeBlocks.length);
 
-    for (let i = 0; i < guessLetters.length; i++) {
-      if (targetWord.includes(guessLetters[i])) {
-        this.activeBlocks[i].classList.add('correct-letter');
+    let submittedRow = this.activeBlocks;
 
-        if (this.activeBlocks[i].value === targetWord[i]) {
-          this.activeBlocks[i].classList.add('correct-position');
+    // flip animation begins
+    for (let i = 0; i < submittedRow.length; i++) {
+      setTimeout(() => {
+        submittedRow[i].classList.add('hide');
+      }, (i * FLIP_ANIMATION_DURATION) / 2);
+
+      submittedRow[i].onanimationend = () => {
+        // color conditions:
+        if (targetWord.includes(guessLetters[i])) {
+          this.activeBlocks[i].classList.add('correct-letter');
+          console.log(this.activeBlocks[i]);
+
+          if (this.activeBlocks[i].value === targetWord[i]) {
+            this.activeBlocks[i].classList.add('correct-position');
+            console.log(this.activeBlocks[i]);
+          }
+        } else {
+          this.activeBlocks[i].classList.add('incorrect-letter');
+          console.log(this.activeBlocks[i]);
         }
-      } else {
-        this.activeBlocks[i].classList.add('incorrect-letter');
-      }
+        submittedRow[i].onanimationend = () => {
+          submittedRow[i].classList.remove('hide');
+          submittedRow[i].classList.add('reveal');
+        };
+      };
     }
-    this.correctSubmission(guessLetters);
+    console.log(submittedRow);
+    // this.correctSubmission();
   },
   correctSubmission() {
     let submittedRow = this.activeBlocks;
