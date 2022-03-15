@@ -2506,20 +2506,23 @@ const userInput = {
       submittedRow[i].onanimationend = () => {
         // color conditions:
         if (targetWord.includes(guessLetters[i])) {
-          this.activeBlocks[i].classList.add('correct-letter');
-          console.log(this.activeBlocks[i]);
+          submittedRow[i].classList.add('correct-letter');
+          console.log(submittedRow[i]);
 
-          if (this.activeBlocks[i].value === targetWord[i]) {
-            this.activeBlocks[i].classList.add('correct-position');
-            console.log(this.activeBlocks[i]);
+          if (submittedRow[i].value === targetWord[i]) {
+            submittedRow[i].classList.add('correct-position');
+            console.log(submittedRow[i]);
           }
         } else {
-          this.activeBlocks[i].classList.add('incorrect-letter');
-          console.log(this.activeBlocks[i]);
+          submittedRow[i].classList.add('incorrect-letter');
+          console.log(submittedRow[i]);
         }
         submittedRow[i].onanimationend = () => {
-          submittedRow[i].classList.remove('hide');
-          submittedRow[i].classList.add('reveal');
+          for (let i = 0; i < submittedRow.length; i++) {
+            setTimeout(() => {
+              submittedRow[i].classList.remove('hide');
+            }, (i * FLIP_ANIMATION_DURATION) / 2);
+          }
         };
       };
     }
