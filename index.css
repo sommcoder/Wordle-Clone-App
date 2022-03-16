@@ -230,29 +230,21 @@ html {
 
 .alert-container {
   position: fixed;
-  top: 10vh;
+  color: white;
+  background-color: black;
+  font-size: 1.8rem;
+  top: 8vh;
   left: 50vw;
   transform: translateX(-50%);
   z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.alert {
   pointer-events: none;
-  background-color: black;
   padding: 0.75rem;
-  border-radius: 0.25rem;
+  border-radius: 0.5rem;
   opacity: 1;
-  transition: opacity 500ms ease-in-out;
   margin-bottom: 0.5rem;
-}
-
-.alert:last-child {
-  margin-bottom: 0;
-}
-
-.alert.hide {
-  opacity: 0;
+  transition: 1000ms ease-in-out 500ms;
+  /* property , duration , timing-function , delay */
 }

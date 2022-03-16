@@ -1,7 +1,8 @@
 /////////// DOM Element Selectors//////
 const keyboardBtnList = $('.keyboard-btn');
 console.log(keyboardBtnList[1]);
-const gameContainer = $('game-container');
+const gameContainer = $('#game-container');
+console.log(gameContainer);
 
 const FLIP_ANIMATION_DURATION = 500;
 
@@ -2400,6 +2401,7 @@ function handleKeyPress(e) {
 const userInput = {
   row: 0,
   block: 0,
+  guessLetters: [],
   activeBlocks: [], // DOM nodes
   // guessLetters: [], // DOM node values
   // word below needs to be in an obj to mutate
@@ -2424,7 +2426,6 @@ const userInput = {
   deleteKey() {
     if (this.activeBlocks.length === 0) return;
     // guard clause
-
     this.block--;
     let currBlock = this.getActiveBlock();
     currBlock.classList.remove('entered-letter');
@@ -2446,36 +2447,48 @@ const userInput = {
       this.notEnoughLettersMessage();
     } else {
       let submittedRow = this.activeBlocks;
-      let guessLetters = [];
+
       submittedRow.forEach(el => {
-        guessLetters.push(el.value);
+        this.guessLetters.push(el.value);
       });
-      let submittedWord = guessLetters.join('');
+      let submittedWord = this.guessLetters.join('');
       if (targetWords.includes(submittedWord)) {
-        this.submitGuess(guessLetters);
+        this.submitGuess(this.guessLetters);
       } else {
         this.shakeBlocks();
         this.notWordMessage();
       }
     }
   },
-  notEnoughLettersMessage(message, duration = 1000) {
-    gameContainer.insertAdjacentHTML(`
+  notEnoughLettersMessage() {
+    gameContainer[0].insertAdjacentHTML(
+      'afterbegin',
+      `
     <div class="alert-container">
         <div class="alert-message">
         Please submit 5 letters!
         </div>
     </div>
-   `);
+   `
+    );
+    setTimeout(() => {
+      document.remove('.alert-container');
+    }, 1500);
   },
-  notWordMessage(message, duration = 1000) {
-    gameContainer.insertAdjacentHTML(`
+  notWordMessage() {
+    gameContainer[0].insertAdjacentHTML(
+      'afterbegin',
+      `
     <div class="alert-container">
         <div class="alert-message">
         Not a word!
         </div>
     </div>
-   `);
+   `
+    );
+    setTimeout(() => {
+      document.remove('.alert-container');
+    }, 1500);
   },
   shakeBlocks() {
     this.activeBlocks.forEach(block => {
@@ -2489,50 +2502,52 @@ const userInput = {
       );
     });
   },
-  danceBlocks() {},
-  submitGuess(guessLetters) {
-    console.log(guessLetters);
+  submitGuess() {
+    console.log(this.guessLetters);
     console.log(this.activeBlocks);
     console.log(this.activeBlocks.length);
 
-    let submittedRow = this.activeBlocks;
-
     // flip animation begins
-    for (let i = 0; i < submittedRow.length; i++) {
+    for (let i = 0; i < this.activeBlocks.length; i++) {
+      // staggers hiding each block:
       setTimeout(() => {
-        submittedRow[i].classList.add('hide');
+        this.activeBlocks[i].classList.add('hide');
       }, (i * FLIP_ANIMATION_DURATION) / 2);
+    }
+    this.colorAssignment(this.activeBlocks);
+  },
+  colorAssignment() {
+    for (let i = 0; i < this.activeBlocks.length; i++) {
+      // color conditions:
+      if (targetWord.includes(this.guessLetters[i])) {
+        this.activeBlocks[i].classList.add('correct-letter');
+        console.log(this.activeBlocks[i]);
 
-      submittedRow[i].onanimationend = () => {
-        // color conditions:
-        if (targetWord.includes(guessLetters[i])) {
-          submittedRow[i].classList.add('correct-letter');
-          console.log(submittedRow[i]);
-
-          if (submittedRow[i].value === targetWord[i]) {
-            submittedRow[i].classList.add('correct-position');
-            console.log(submittedRow[i]);
-          }
-        } else {
-          submittedRow[i].classList.add('incorrect-letter');
-          console.log(submittedRow[i]);
+        if (this.activeBlocks[i].value === targetWord[i]) {
+          this.activeBlocks[i].classList.add('correct-position');
+          console.log(this.activeBlocks[i]);
         }
-        submittedRow[i].onanimationend = () => {
-          for (let i = 0; i < submittedRow.length; i++) {
-            setTimeout(() => {
-              submittedRow[i].classList.remove('hide');
-            }, (i * FLIP_ANIMATION_DURATION) / 2);
-          }
-        };
+      } else {
+        this.activeBlocks[i].classList.add('incorrect-letter');
+        console.log(this.activeBlocks[i]);
+      }
+
+      this.activeBlocks[i].onanimationend = () => {
+        this.activeBlocks[i].classList.add('reveal');
+      };
+      this.activeBlocks[i].onanimationend = () => {
+        for (let i = 0; i < this.activeBlocks.length; i++) {
+          setTimeout(() => {
+            this.activeBlocks[i].classList.hide('hide');
+          }, (i * FLIP_ANIMATION_DURATION) / 2);
+        }
       };
     }
-    console.log(submittedRow);
     // this.correctSubmission();
   },
   correctSubmission() {
-    let submittedRow = this.activeBlocks;
-    console.log(submittedRow);
-    let result = submittedRow.every(el =>
+    console.log(this.activeBlocks);
+    let result = this.activeBlocks.every(el =>
       el.classList.contains('correct-position')
     );
     console.log(result);
@@ -2540,4 +2555,5 @@ const userInput = {
       stopInteraction();
     } else this.nextRowInit();
   },
+  danceBlocks() {},
 };
