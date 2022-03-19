@@ -120,12 +120,12 @@ html {
 }
 
 .hide {
-  transform: rotateX(90deg);
+  transform: rotateX(-90deg);
   animation: 350ms ease-in-out;
 }
 
 .reveal {
-  transform: rotateX(-90deg);
+  transform: rotateX(90deg);
   animation: 350ms ease-in-out;
 }
 
@@ -228,7 +228,8 @@ html {
 
 /* ALERT CONTAINER */
 
-.alert-container {
+.alert-container-1,
+.alert-container-2 {
   position: fixed;
   color: white;
   background-color: black;
@@ -237,7 +238,7 @@ html {
   left: 50vw;
   transform: translateX(-50%);
   z-index: 2;
-  display: flex;
+  display: none;
   flex-direction: column;
   align-items: center;
   pointer-events: none;
@@ -245,6 +246,19 @@ html {
   border-radius: 0.5rem;
   opacity: 1;
   margin-bottom: 0.5rem;
-  transition: 1000ms ease-in-out 500ms;
+  transition: 1000ms linear 500ms;
+  animation-name: fade-out;
   /* property , duration , timing-function , delay */
+}
+
+@keyframes fade-out {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+  }
 }
