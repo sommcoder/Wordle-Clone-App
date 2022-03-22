@@ -119,14 +119,29 @@ html {
   animation: shake 250ms ease-in-out;
 }
 
-.hide {
-  transform: rotateX(-90deg);
-  animation: 350ms ease-in-out;
+.flip {
+  animation: 0.5s linear flipping;
 }
 
-.reveal {
+.dance {
+  animation: 0.5s linear dancing;
+}
+
+/* .reveal {
   transform: rotateX(90deg);
   animation: 350ms ease-in-out;
+} */
+
+@keyframes flipping {
+  0% {
+    transform: RotateX(0deg);
+  }
+  50% {
+    transform: RotateX(90deg);
+  }
+  100% {
+    transform: RotateX(0deg);
+  }
 }
 
 @keyframes shake {
@@ -148,23 +163,6 @@ html {
   100% {
     transform: translateX(0%);
   }
-}
-
-.correct-letter {
-  background-color: var(--correct-letter);
-  border: 0.2rem solid black;
-}
-
-.correct-position {
-  background-color: var(--correct-position);
-  border: 0.2rem solid black;
-  color: white;
-}
-
-.incorrect-letter {
-  background-color: var(--incorrect-letter);
-  border: 0.2rem solid black;
-  color: white;
 }
 
 .game__input-block:focus {
@@ -207,7 +205,7 @@ html {
 }
 
 .keyboard-btn:hover {
-  background-color: rgb(224, 224, 224);
+  opacity: 0.75;
 }
 
 .keyboard-btn:active {
@@ -224,6 +222,23 @@ html {
   flex-basis: 0%;
   flex-grow: 0.5;
   flex-shrink: 1;
+}
+
+.correct-letter {
+  background-color: var(--correct-letter);
+  border: 0.2rem solid black;
+}
+
+.correct-position {
+  background-color: var(--correct-position);
+  border: 0.2rem solid black;
+  color: white;
+}
+
+.incorrect-letter {
+  background-color: var(--incorrect-letter);
+  border: 0.2rem solid black;
+  color: white;
 }
 
 /* ALERT CONTAINER */
@@ -260,5 +275,35 @@ html {
   }
   100% {
     opacity: 0;
+  }
+}
+
+@keyframes dancing {
+  0% {
+    transform: translateY(0);
+  }
+  15% {
+    transform: translateY(0.25);
+  }
+  30% {
+    transform: translateY(0.25);
+  }
+  45% {
+    transform: translateY(-0.25);
+  }
+  60% {
+    transform: translateY(-0.25);
+  }
+  65% {
+    transform: translateY(0.25);
+  }
+  80% {
+    transform: translateY(-0.25);
+  }
+  95% {
+    transform: translateY(0.25);
+  }
+  100% {
+    transform: translateY(-0.25);
   }
 }

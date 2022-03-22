@@ -2,7 +2,7 @@
 const keyboardBtnList = $('.keyboard-btn');
 const gameContainer = $('#game-container');
 
-const FLIP_ANIMATION_DURATION = 500;
+const FLIP_ANIMATION_DURATION = 450;
 
 ///////////// Word Library///////////
 const targetWords = [
@@ -2447,71 +2447,52 @@ const userInput = {
       });
       let submittedWord = this.guessLetters.join('');
       if (targetWords.includes(submittedWord)) {
-        this.submitGuess(this.guessLetters);
+        this.submitGuess();
       } else {
         this.shakeBlocks();
         this.notWordMessage();
       }
     }
   },
-  submitGuess() {
-    for (let i = 0; i < this.activeBlocks.length; i++) {
-      // staggers the hiding animation for each block:
-      // setTimeout(() => {
-      //   this.activeBlocks[i].classList.add('hide');
-      // }, (i * FLIP_ANIMATION_DURATION) / 2);
-
-      // add color classes based on criteria:
-      const subRow = $(`.game__input-row-${this.row}`);
-      console.log(subRow);
-
-      subRow.addEventListener('animationend', () => {
-        if (targetWord.includes(this.guessLetters[i])) {
-          this.activeBlocks[i].classList.add('correct-letter');
-          console.log(this.activeBlocks[i]);
-
-          if (this.activeBlocks[i].value === targetWord[i]) {
-            this.activeBlocks[i].classList.add('correct-position');
-            console.log(this.activeBlocks[i]);
-          }
-        } else {
-          this.activeBlocks[i].classList.add('incorrect-letter');
-          console.log(this.activeBlocks[i]);
-        }
-      });
-      setTimeout(() => {
-        this.activeBlocks[i].classList.add('reveal');
-      }, (i * FLIP_ANIMATION_DURATION) / 2);
-    }
-    // this.nextRowInit();
-    // this.colorAssignment(this.activeBlocks);
+  addColorToKey(letter, color) {
+    const key = document.querySelector(`[data-key='${letter}']`);
+    console.log(this.activeBlocks);
+    key.classList.add(color);
   },
-  animatedKeyboard(letter, color) {
-    for (const elem of document.getElementsByClassName('keyboard-button')) {
-      if (elem.textContent === letter) {
-        let oldColor = elem.style.backgroundColor;
-        if (oldColor === 'green') {
-          return;
-        }
+  submitGuess() {
+    let letters = this.guessLetters;
+    console.log(this.activeBlocks);
+    this.activeBlocks.forEach((block, i) => {
+      let letter = this.guessLetters[i];
 
-        if (oldColor === 'yellow' && color !== 'green') {
-          return;
-        }
-
-        elem.style.backgroundColor = color;
-        break;
-      }
-    }
+      setTimeout(() => {
+        block.classList.add('flip');
+        setTimeout(() => {
+          if (block.value === targetWord[i]) {
+            block.classList.add('correct-position');
+            setTimeout(() => {
+              this.addColorToKey(letter, 'correct-position');
+            });
+          } else if (targetWord.includes(letters[i])) {
+            block.classList.add('correct-letter');
+            this.addColorToKey(letter, 'correct-letter');
+          } else {
+            block.classList.add('incorrect-letter');
+            this.addColorToKey(letter, 'incorrect-letter');
+          }
+        }, FLIP_ANIMATION_DURATION / 2);
+      }, FLIP_ANIMATION_DURATION * i);
+    });
+    this.correctSubmission();
   },
   correctSubmission() {
-    console.log(this.activeBlocks);
     let result = this.activeBlocks.every(el =>
       el.classList.contains('correct-position')
     );
     console.log(result);
-    if (result === true) {
-      stopInteraction();
-    } else this.nextRowInit();
+    if (result === true) this.stopInteraction();
+    // if (result === false) this.nextRowInit();
+    // } else this.nextRowInit();
   },
   notWordMessage() {
     $('.alert-container-1').fadeIn(300).delay(1000).fadeOut(400);
@@ -2531,5 +2512,16 @@ const userInput = {
       );
     });
   },
-  danceBlocks() {},
+  danceBlocks() {
+    this.activeBlocks.forEach(block => {
+      block.classList.add('dance');
+      block.addEventListener(
+        'animationend',
+        () => {
+          block.classList.remove('dance');
+        },
+        { once: true }
+      );
+    });
+  },
 };
