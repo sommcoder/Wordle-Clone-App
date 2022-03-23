@@ -2362,7 +2362,7 @@ function stopInteraction() {
 
 function handleMouseClick(e) {
   if (e.target.matches('[data-key]')) {
-    userInput.pressKey(e.target.dataset.key);
+    userInput.pressKey(e.target.dataset.key.toLowerCase());
     return;
   }
 
