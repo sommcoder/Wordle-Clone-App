@@ -39,22 +39,6 @@ html {
   text-align: center;
 }
 
-#nav__hamburger-container {
-  position: fixed;
-  display: inline-block;
-  cursor: pointer;
-}
-
-.nav__hamburger-line1,
-.nav__hamburger-line2,
-.nav__hamburger-line3 {
-  width: 2.1rem;
-  height: 0.3rem;
-  margin-top: 0.4rem;
-  margin-bottom: 0.4rem;
-  border-radius: 0.2rem;
-  background-color: black;
-}
 /* GAME INPUT SECTION */
 
 #game-container {
@@ -77,6 +61,11 @@ html {
 }
 
 .game__input-block {
+  user-select: none; /* supported by Chrome and Opera */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
   font-size: 2.4rem;
   text-align: center;
   text-transform: uppercase;
@@ -183,10 +172,16 @@ html {
   }
 }
 
+.game__input-block:enabled {
+  user-select: none;
+}
+
 .game__input-block:focus {
+  user-select: none;
   outline: none;
   text-decoration: none;
   pointer-events: none;
+  outline-width: 0;
 }
 
 /* KEYBOARD SECTION */

@@ -12,6 +12,7 @@ const INDEXES_PER_ROW = 4;
 
 //// WORD LIST ////
 const targetWords = [
+  'penis',
   'cramp',
   'found',
   'audio',
@@ -2408,6 +2409,7 @@ const userInput = {
   },
   // adds CSS class to pressed key
   pressKey(key) {
+    console.log(key);
     if (this.activeBlocks.length >= 5) return;
     let currBlock = this.getActiveBlock();
     currBlock.value = key;
@@ -2452,6 +2454,8 @@ const userInput = {
     key.classList.add(color);
   },
   submitGuess() {
+    // user can't interact while this occurs
+    stopInteraction();
     let letters = this.guessLetters;
     this.activeBlocks.forEach((block, i) => {
       let letter = this.guessLetters[i];
@@ -2492,6 +2496,8 @@ const userInput = {
         }
         if (result === false && this.row === 5) this.failPrompt();
         else this.nextRowInit();
+        // user can now inteact again
+        startInteraction();
       },
       { once: true }
     );
