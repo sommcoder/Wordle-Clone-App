@@ -18,16 +18,39 @@
 
       <span id="title">Wordle</span>
     </nav>
-    <div></div>
     <div id="game-container">
       <div id="game__input-container">
         <div data-guess-grid class="game__input-row game__input-row-0">
-          <div class="alert-container-1">
+          <!-- below is all display: none -->
+          <div class="alert-container alert-container-1">
             <div class="alert-message">Not in word list</div>
           </div>
-          <div class="alert-container-2">
+          <div class="alert-container alert-container-2">
             <div class="alert-message">Not enough letters</div>
           </div>
+          <div class="alert-container attempt-1">
+            <div class="alert-message">AMAZING!!!</div>
+          </div>
+          <div class="alert-container attempt-2">
+            <div class="alert-message">Magnificent!</div>
+          </div>
+          <div class="alert-container attempt-3">
+            <div class="alert-message">Awesome!</div>
+          </div>
+          <div class="alert-container attempt-4">
+            <div class="alert-message">Well done!</div>
+          </div>
+          <div class="alert-container attempt-5">
+            <div class="alert-message">Good!</div>
+          </div>
+          <div class="alert-container attempt-6">
+            <div class="alert-message">Pfew! Just got it!</div>
+          </div>
+          <div class="alert-container failed">
+            <div class="alert-message">Try again tomorrow :(</div>
+          </div>
+          <!-- above is display: none -->
+
           <input
             data-guess
             readonly

@@ -1,8 +1,10 @@
-/////////// DOM Element Selectors//////
+//// CONFIG /////
 const keyboardBtnList = $('.keyboard-btn');
 const gameContainer = $('#game-container');
 
-const FLIP_ANIMATION_DURATION = 450;
+const FLIP_ANIMATION_DURATION = 450; //ms
+const DANCE_ANIMATION_DURATION = 550; //ms
+const INDEXES_PER_ROW = 4;
 
 ///////////// Word Library///////////
 const targetWords = [
@@ -2327,8 +2329,11 @@ const targetWords = [
   'shave',
 ];
 
-//// Target Word Selector ////
+////////////////////////////////////////////////////
+//////////////////// MODEL /////////////////////////
+////////////////////////////////////////////////////
 
+//// Target Word Selector ////
 const offsetFromDate = new Date(2022, 0, 1);
 const msOffset = Date.now() - offsetFromDate;
 const dayOffset = -Math.trunc(
@@ -2351,6 +2356,10 @@ function stopInteraction() {
   $(document).off('click', handleMouseClick);
   $(document).off('keydown', handleKeyPress);
 }
+
+////////////////////////////////////////////////////
+////////////////// CONTROLLER ///////////////////////
+////////////////////////////////////////////////////
 
 function handleMouseClick(e) {
   if (e.target.matches('[data-key]')) {
@@ -2406,37 +2415,35 @@ const userInput = {
       `.game__input-row-${this.row}-block-${this.block}`
     );
   },
+  // adds CSS class to pressed key
   pressKey(key) {
-    console.log(this.activeBlocks);
     if (this.activeBlocks.length >= 5) return;
     let currBlock = this.getActiveBlock();
     currBlock.value = key;
     currBlock.classList.add('entered-letter');
-    // add animation link to CSS per key press
     this.activeBlocks.push(currBlock);
     this.block++;
   },
+  // deletes entry, updates arrays
   deleteKey() {
     if (this.activeBlocks.length === 0) return;
-    // guard clause
     this.block--;
     let currBlock = this.getActiveBlock();
     currBlock.classList.remove('entered-letter');
     currBlock.value = '';
     this.activeBlocks.splice(-1);
-    console.log(this.activeBlocks);
-    // resets guessLetter array to empty
     this.guessLetters = [];
   },
+  // moves to the next row
   nextRowInit() {
     if (this.row !== 6) {
-      this.block = 0; // resets to 1st block
-      this.activeBlocks.splice(0, this.activeBlocks.length); // remove contents of array
-      console.log(this.activeBlocks);
+      this.block = 0;
+      this.activeBlocks.splice(0, this.activeBlocks.length);
       this.guessLetters = [];
-      this.row++; // next row
+      this.row++;
     }
   },
+  // is the word in the word list?
   wordListCheck() {
     if (this.activeBlocks.length < 5) {
       this.shakeBlocks();
@@ -2454,25 +2461,23 @@ const userInput = {
       }
     }
   },
+  // apply CSS to submitted blocks
   addColorToKey(letter, color) {
     const key = document.querySelector(`[data-key='${letter}']`);
-    console.log(this.activeBlocks);
     key.classList.add(color);
   },
   submitGuess() {
     let letters = this.guessLetters;
-    console.log(this.activeBlocks);
     this.activeBlocks.forEach((block, i) => {
       let letter = this.guessLetters[i];
-
+      // 1) flip animation first
       setTimeout(() => {
         block.classList.add('flip');
+        // 2) colors are assigned
         setTimeout(() => {
           if (block.value === targetWord[i]) {
             block.classList.add('correct-position');
-            setTimeout(() => {
-              this.addColorToKey(letter, 'correct-position');
-            });
+            this.addColorToKey(letter, 'correct-position');
           } else if (targetWord.includes(letters[i])) {
             block.classList.add('correct-letter');
             this.addColorToKey(letter, 'correct-letter');
@@ -2481,18 +2486,30 @@ const userInput = {
             this.addColorToKey(letter, 'incorrect-letter');
           }
         }, FLIP_ANIMATION_DURATION / 2);
+        // 3) blocks flip back to reveal results
       }, FLIP_ANIMATION_DURATION * i);
     });
+    // 4) check for correct submission
     this.correctSubmission();
   },
   correctSubmission() {
-    let result = this.activeBlocks.every(el =>
-      el.classList.contains('correct-position')
+    const lastBlock = this.activeBlocks.length - 1;
+    // since seTimout() is async, once last block is done animation, continue code..
+    this.activeBlocks[lastBlock].addEventListener(
+      'animationend',
+      () => {
+        let result = this.activeBlocks.every(el =>
+          el.classList.contains('correct-position')
+        );
+        if (result === true) {
+          stopInteraction();
+          this.danceBlocks();
+        }
+        if (result === false && this.row === 5) this.failPrompt();
+        else this.nextRowInit();
+      },
+      { once: true }
     );
-    console.log(result);
-    if (result === true) this.stopInteraction();
-    // if (result === false) this.nextRowInit();
-    // } else this.nextRowInit();
   },
   notWordMessage() {
     $('.alert-container-1').fadeIn(300).delay(1000).fadeOut(400);
@@ -2513,15 +2530,21 @@ const userInput = {
     });
   },
   danceBlocks() {
-    this.activeBlocks.forEach(block => {
-      block.classList.add('dance');
-      block.addEventListener(
-        'animationend',
-        () => {
-          block.classList.remove('dance');
-        },
-        { once: true }
-      );
+    this.activeBlocks.forEach((block, i) => {
+      // stagger dancing animation
+      setTimeout(() => {
+        block.classList.add('dance');
+      }, (i * DANCE_ANIMATION_DURATION) / 5);
     });
+    this.successPrompt();
+  },
+  successPrompt() {
+    const attempts = this.row + 1;
+    console.log(attempts);
+
+    $(`.attempt-${attempts}`).fadeIn(300).delay(1000).fadeOut(400);
+  },
+  failPrompt() {
+    $('.failed').fadeIn(300).delay(1000).fadeOut(400);
   },
 };

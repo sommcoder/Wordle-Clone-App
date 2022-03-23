@@ -115,33 +115,10 @@ html {
   }
 }
 
+/* Animations */
+
 .shake {
   animation: shake 250ms ease-in-out;
-}
-
-.flip {
-  animation: 0.5s linear flipping;
-}
-
-.dance {
-  animation: 0.5s linear dancing;
-}
-
-/* .reveal {
-  transform: rotateX(90deg);
-  animation: 350ms ease-in-out;
-} */
-
-@keyframes flipping {
-  0% {
-    transform: RotateX(0deg);
-  }
-  50% {
-    transform: RotateX(90deg);
-  }
-  100% {
-    transform: RotateX(0deg);
-  }
 }
 
 @keyframes shake {
@@ -162,6 +139,47 @@ html {
   }
   100% {
     transform: translateX(0%);
+  }
+}
+
+.flip {
+  animation: 0.5s linear flipping;
+}
+
+@keyframes flipping {
+  0% {
+    transform: RotateX(0deg);
+  }
+  50% {
+    transform: RotateX(90deg);
+  }
+  100% {
+    transform: RotateX(0deg);
+  }
+}
+
+.dance {
+  animation: 0.5s linear dancing;
+}
+
+@keyframes dancing {
+  20% {
+    transform: translateY(-50%);
+  }
+  40% {
+    transform: translateY(5%);
+  }
+  60% {
+    transform: translateY(-25%);
+  }
+  80% {
+    transform: translateY(2.5%);
+  }
+  90% {
+    transform: translateY(-5%);
+  }
+  100% {
+    transform: translateY(0%);
   }
 }
 
@@ -224,6 +242,8 @@ html {
   flex-shrink: 1;
 }
 
+/* BLOCK RESULT STYLING */
+
 .correct-letter {
   background-color: var(--correct-letter);
   border: 0.2rem solid black;
@@ -243,8 +263,13 @@ html {
 
 /* ALERT CONTAINER */
 
-.alert-container-1,
-.alert-container-2 {
+.alert-container,
+.attempt-1,
+.attempt-2,
+.attempt-3,
+.attempt-4,
+.attempt-5,
+.attempt-6 {
   position: fixed;
   color: white;
   background-color: black;
@@ -266,6 +291,8 @@ html {
   /* property , duration , timing-function , delay */
 }
 
+/* alert animation */
+
 @keyframes fade-out {
   0% {
     opacity: 1;
@@ -275,35 +302,5 @@ html {
   }
   100% {
     opacity: 0;
-  }
-}
-
-@keyframes dancing {
-  0% {
-    transform: translateY(0);
-  }
-  15% {
-    transform: translateY(0.25);
-  }
-  30% {
-    transform: translateY(0.25);
-  }
-  45% {
-    transform: translateY(-0.25);
-  }
-  60% {
-    transform: translateY(-0.25);
-  }
-  65% {
-    transform: translateY(0.25);
-  }
-  80% {
-    transform: translateY(-0.25);
-  }
-  95% {
-    transform: translateY(0.25);
-  }
-  100% {
-    transform: translateY(-0.25);
   }
 }
