@@ -2340,7 +2340,6 @@ const dayOffset = -Math.trunc(
   (new Date(2022, 0, 1) - Date.now()) / 1000 / 60 / 60 / 24
 ); // # of days since 2022, Jan, 1st
 const [...targetWord] = targetWords[Math.floor(dayOffset)]; // word of the day calculation
-console.log(targetWord);
 
 /////////// Event Handling///////////
 function startInteraction() {
