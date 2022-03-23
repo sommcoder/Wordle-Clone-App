@@ -2342,9 +2342,6 @@ const dayOffset = -Math.trunc(
 ); // # of days since 2022, Jan, 1st
 const [...targetWord] = targetWords[Math.floor(dayOffset)]; // word of the day calculation
 
-///// STATE //////
-let keyFireState = false;
-
 /////////// Event Handling///////////
 function startInteraction() {
   $(document).ready(() => {
@@ -2394,7 +2391,6 @@ function handleKeyPress(e) {
 
   if (e.key.match(/^[A-Z,a-z]$/)) {
     userInput.pressKey(e.key.toLowerCase());
-    return (keyFireState = true);
   } else return; // all other key commands get returned
 }
 
