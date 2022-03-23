@@ -2378,19 +2378,21 @@ function handleMouseClick(e) {
 }
 
 function handleKeyPress(e) {
-  if (e.key.match(/^[A-Z,a-z]$/)) {
-    userInput.pressKey(e.key.toLowerCase());
-    return;
-  }
-
   if (e.key === 'Backspace' || e.key === 'Delete') {
     userInput.deleteKey(e.key);
     return;
   }
 
-  e.key === 'Enter' && userInput.activeBlocks.length === 5
-    ? userInput.wordListCheck()
-    : userInput.notEnoughLettersMessage();
+  if (e.key === 'Enter' && userInput.activeBlocks.length === 5)
+    userInput.wordListCheck();
+
+  if (e.key === 'Enter' && userInput.activeBlocks.length !== 5)
+    userInput.notEnoughLettersMessage();
+
+  if (e.key.match(/^[A-Z,a-z]$/)) {
+    userInput.pressKey(e.key.toLowerCase());
+    return;
+  } else return; // all other key commands get returned
 }
 
 /////////////////////////////////////////////////
@@ -2491,8 +2493,8 @@ const userInput = {
           el.classList.contains('correct-position')
         );
         if (result === true) {
-          stopInteraction();
           this.danceBlocks();
+          return stopInteraction();
         }
         if (result === false && this.row === 5) this.failPrompt();
         else this.nextRowInit();
