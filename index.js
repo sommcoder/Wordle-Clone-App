@@ -2344,7 +2344,7 @@ const [...targetWord] = targetWords[Math.floor(dayOffset)]; // word of the day c
 /////////// Event Handling///////////
 function startInteraction() {
   $(document).ready(() => {
-    $(document).on('click', handleMouseClick);
+    $(keyboardBtnList).on('click', handleMouseClick);
     $(document).on('keydown', handleKeyPress);
   });
 }
@@ -2352,7 +2352,7 @@ function startInteraction() {
 startInteraction(); // initiates program
 
 function stopInteraction() {
-  $(document).off('click', handleMouseClick);
+  $(keyboardBtnList).off('click', handleMouseClick);
   $(document).off('keydown', handleKeyPress);
 }
 
@@ -2366,38 +2366,30 @@ function handleMouseClick(e) {
     return;
   }
 
-  if (e.target.matches('[data-enter]')) {
-    userInput.activeBlocks.length === 5
-      ? userInput.wordListCheck()
-      : alert('You need to submit 5 letters!');
-  }
-
   if (e.target.matches('[data-delete]')) {
     userInput.deleteKey();
     return;
   }
 
-  if (e.target.matches('[data-enter]') && userInput.activeBlocks.length === 5)
-    userInput.wordListCheck();
-
-  if (e.target.matches('[data-enter]') && userInput.activeBlocks.length !== 5)
-    userInput.errMessage();
+  e.target.matches('[data-enter]') && userInput.activeBlocks.length === 5
+    ? userInput.wordListCheck()
+    : userInput.notEnoughLettersMessage();
 }
 
 function handleKeyPress(e) {
   if (e.key.match(/^[A-Z,a-z]$/)) {
-    userInput.pressKey(e.key);
+    userInput.pressKey(e.key.toLowerCase());
     return;
   }
-  if (e.key === 'Enter' && userInput.activeBlocks.length === 0) return;
-
-  if (e.key === 'Enter' && userInput.activeBlocks.length <= 5)
-    userInput.wordListCheck();
 
   if (e.key === 'Backspace' || e.key === 'Delete') {
     userInput.deleteKey(e.key);
     return;
   }
+
+  e.key === 'Enter' && userInput.activeBlocks.length === 5
+    ? userInput.wordListCheck()
+    : userInput.notEnoughLettersMessage();
 }
 
 /////////////////////////////////////////////////
@@ -2444,20 +2436,14 @@ const userInput = {
   },
   // is the word in the word list?
   wordListCheck() {
-    if (this.activeBlocks.length < 5) {
-      this.shakeBlocks();
-      this.notEnoughLettersMessage();
+    this.activeBlocks.forEach(el => {
+      this.guessLetters.push(el.value);
+    });
+    let submittedWord = this.guessLetters.join('');
+    if (targetWords.includes(submittedWord)) {
+      this.submitGuess();
     } else {
-      this.activeBlocks.forEach(el => {
-        this.guessLetters.push(el.value);
-      });
-      let submittedWord = this.guessLetters.join('');
-      if (targetWords.includes(submittedWord)) {
-        this.submitGuess();
-      } else {
-        this.shakeBlocks();
-        this.notWordMessage();
-      }
+      this.notWordMessage();
     }
   },
   // apply CSS to submitted blocks
@@ -2511,9 +2497,11 @@ const userInput = {
     );
   },
   notWordMessage() {
+    this.shakeBlocks();
     $('.alert-container-1').fadeIn(300).delay(1000).fadeOut(400);
   },
   notEnoughLettersMessage() {
+    this.shakeBlocks();
     $('.alert-container-2').fadeIn(300).delay(1000).fadeOut(400);
   },
   shakeBlocks() {
